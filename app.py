@@ -7,6 +7,29 @@ import os
 import time
 import sqlite3
 
+def check_and_create_tables():
+    """Проверяет и создает таблицы при необходимости"""
+    with app.app_context():
+        inspector = db.inspect(db.engine)
+        existing_tables = inspector.get_table_names()
+        
+        required_tables = ['users', 'categories', 'products']
+        
+        # Если отсутствуют какие-то таблицы
+        if not all(table in existing_tables for table in required_tables):
+            print("Создание недостающих таблиц...")
+            db.create_all()
+            
+            # Добавляем тестовые данные только если таблица users пуста
+            if 'users' in existing_tables and not User.query.first():
+                add_test_data()
+                print("✓ Тестовые данные добавлены")
+            elif 'users' not in existing_tables:
+                add_test_data()
+                print("✓ Таблицы и тестовые данные созданы")
+        else:
+            print("✓ Все таблицы существуют")
+
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'warehouse-secret-key-2024'
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///warehouse_new.db'  # НОВОЕ ИМЯ ФАЙЛА
@@ -462,7 +485,7 @@ def inject_user():
         }
     }
 
-
+check_and_create_tables()
 if __name__ == '__main__':
     # Гарантированно создаем новую БД
     success = create_database()
@@ -480,4 +503,5 @@ if __name__ == '__main__':
     else:
         print("=" * 60)
         print("❌ НЕ УДАЛОСЬ СОЗДАТЬ БАЗУ ДАННЫХ")
+
         print("=" * 60)
