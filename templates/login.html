@@ -1,0 +1,103 @@
+{% extends "base.html" %}
+
+{% block title %}Вход в систему{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-6 col-lg-5">
+        <div class="card shadow">
+            <div class="card-header bg-primary text-white text-center">
+                <h4 class="mb-0"><i class="bi bi-box-arrow-in-right"></i> Вход в систему</h4>
+            </div>
+            <div class="card-body p-4">
+                <form method="POST" action="{{ url_for('login') }}">
+                    <div class="mb-3">
+                        <label for="username" class="form-label">
+                            <i class="bi bi-person"></i> Имя пользователя *
+                        </label>
+                        <input type="text" class="form-control" id="username" name="username" 
+                               required autofocus placeholder="Введите имя пользователя">
+                        <div class="form-text">
+                            Используйте имя пользователя, указанное при регистрации
+                        </div>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="password" class="form-label">
+                            <i class="bi bi-key"></i> Пароль *
+                        </label>
+                        <input type="password" class="form-control" id="password" name="password" 
+                               required placeholder="Введите пароль">
+                        <div class="form-text">
+                            Пароль должен содержать не менее 6 символов
+                        </div>
+                    </div>
+                    
+                    <div class="mb-3 form-check">
+                        <input type="checkbox" class="form-check-input" id="remember" name="remember">
+                        <label class="form-check-label" for="remember">
+                            Запомнить меня
+                        </label>
+                    </div>
+                    
+                    <div class="d-grid gap-2">
+                        <button type="submit" class="btn btn-primary btn-lg">
+                            <i class="bi bi-box-arrow-in-right"></i> Войти
+                        </button>
+                    </div>
+                </form>
+                
+                <div class="text-center mt-4">
+                    <p class="mb-2">Нет аккаунта?</p>
+                    <a href="{{ url_for('register') }}" class="btn btn-outline-primary">
+                        <i class="bi bi-person-plus"></i> Зарегистрироваться
+                    </a>
+                </div>
+            </div>
+            
+            <div class="card-footer text-center bg-light">
+                <small class="text-muted">
+                    <i class="bi bi-info-circle"></i>
+                    Для тестирования системы можно использовать:<br>
+                    <strong>Администратор:</strong> admin / admin123<br>
+                    <strong>Пользователь:</strong> user / user123 (если создан)
+                </small>
+            </div>
+        </div>
+        
+        <div class="mt-4">
+            <div class="alert alert-info">
+                <h5 class="alert-heading"><i class="bi bi-shield-check"></i> Безопасность</h5>
+                <ul class="mb-0">
+                    <li>Все пароли хранятся в зашифрованном виде</li>
+                    <li>Сессии защищены от перехвата</li>
+                    <li>Рекомендуем использовать сложные пароли</li>
+                    <li>Не передавайте свои учетные данные третьим лицам</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .card {
+        border: none;
+        border-radius: 15px;
+    }
+    .card-header {
+        border-radius: 15px 15px 0 0 !important;
+        padding: 1.5rem;
+    }
+    .form-control:focus {
+        border-color: #0d6efd;
+        box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.25);
+    }
+    .btn-primary {
+        padding: 0.75rem;
+        font-weight: 500;
+    }
+</style>
+
+<!-- Bootstrap Icons -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
+{% endblock %}

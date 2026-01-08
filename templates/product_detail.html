@@ -1,0 +1,202 @@
+{% extends "base.html" %}
+
+{% block title %}{{ product.name }} - Детали товара{% endblock %}
+
+{% block content %}
+<div class="container">
+    <nav aria-label="breadcrumb" class="mb-4">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="{{ url_for('index') }}">Главная</a></li>
+            <li class="breadcrumb-item"><a href="{{ url_for('search') }}">Поиск товаров</a></li>
+            <li class="breadcrumb-item active" aria-current="page">{{ product.name }}</li>
+        </ol>
+    </nav>
+
+    <div class="row">
+        <div class="col-lg-8">
+            <div class="card mb-4">
+                <div class="card-header bg-primary text-white">
+                    <h3 class="mb-0">{{ product.name }}</h3>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <div class="card bg-light">
+                                <div class="card-body">
+                                    <h5 class="card-title">Основная информация</h5>
+                                    <ul class="list-unstyled mb-0">
+                                        <li class="mb-2">
+                                            <strong>Артикул:</strong>
+                                            <span class="badge bg-secondary ms-2">{{ product.sku }}</span>
+                                        </li>
+                                        <li class="mb-2">
+                                            <strong>Категория:</strong>
+                                            <span class="badge bg-info ms-2">
+                                                {{ product.category.name if product.category else 'Не указана' }}
+                                            </span>
+                                        </li>
+                                        <li class="mb-2">
+                                            <strong>Дата добавления:</strong>
+                                            <span class="ms-2">{{ product.created_at.strftime('%d.%m.%Y') }}</span>
+                                        </li>
+                                        <li class="mb-2">
+                                            <strong>Просмотров:</strong>
+                                            <span class="badge bg-warning ms-2">{{ product.views_count }}</span>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="col-md-6 mb-3">
+                            <div class="card bg-light">
+                                <div class="card-body">
+                                    <h5 class="card-title">Наличие и цена</h5>
+                                    <div class="text-center">
+                                        <h2 class="text-success mb-3">{{ "%.2f"|format(product.price) }} ₽</h2>
+                                        {% if product.quantity > 10 %}
+                                        <span class="badge bg-success fs-6 p-3">В наличии: {{ product.quantity }} шт.</span>
+                                        {% elif product.quantity > 0 %}
+                                        <span class="badge bg-warning fs-6 p-3">Мало: {{ product.quantity }} шт.</span>
+                                        {% else %}
+                                        <span class="badge bg-danger fs-6 p-3">Нет в наличии</span>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="mb-4">
+                        <h5 class="card-title">Описание товара</h5>
+                        <div class="card">
+                            <div class="card-body">
+                                <p class="card-text">{{ product.description }}</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="mb-4">
+                        <h5 class="card-title">📋 Подробные характеристики</h5>
+                        <div class="card">
+                            <div class="card-body">
+                                {% if product.detailed_specs %}
+                                <pre class="card-text" style="white-space: pre-wrap; font-family: inherit;">{{ product.detailed_specs }}</pre>
+                                {% else %}
+                                <p class="card-text text-muted">Подробные характеристики не указаны</p>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+
+                    {% if session.is_admin %}
+                    <div class="mt-4">
+                        <h5>Административные действия</h5>
+                        <div class="btn-group" role="group">
+                            <a href="{{ url_for('edit_product', id=product.id) }}" class="btn btn-warning">
+                                <i class="bi bi-pencil"></i> Редактировать
+                            </a>
+                            <a href="{{ url_for('delete_product', id=product.id) }}" 
+                               class="btn btn-danger"
+                               onclick="return confirm('Вы уверены, что хотите удалить товар \"{{ product.name }}\"?')">
+                                <i class="bi bi-trash"></i> Удалить
+                            </a>
+                        </div>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-4">
+            <div class="card mb-4">
+                <div class="card-header bg-info text-white">
+                    <h5 class="mb-0">📊 Статистика товара</h5>
+                </div>
+                <div class="card-body">
+                    <ul class="list-group list-group-flush">
+                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                            ID товара
+                            <span class="badge bg-primary rounded-pill">{{ product.id }}</span>
+                        </li>
+                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                            Категория
+                            <span class="badge bg-info rounded-pill">
+                                {{ product.category.name if product.category else 'Нет' }}
+                            </span>
+                        </li>
+                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                            Дата добавления
+                            <small>{{ product.created_at.strftime('%d.%m.%Y %H:%M') }}</small>
+                        </li>
+                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                            Просмотры
+                            <span class="badge bg-warning rounded-pill">{{ product.views_count }}</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="card mb-4">
+                <div class="card-header bg-success text-white">
+                    <h5 class="mb-0">💡 Быстрые действия</h5>
+                </div>
+                <div class="card-body">
+                    <div class="d-grid gap-2">
+                        <a href="{{ url_for('search') }}" class="btn btn-outline-primary">
+                            <i class="bi bi-search"></i> Вернуться к поиску
+                        </a>
+                        {% if session.is_admin %}
+                        <a href="{{ url_for('admin') }}" class="btn btn-outline-warning">
+                            <i class="bi bi-gear"></i> В админку
+                        </a>
+                        {% endif %}
+                        <button type="button" class="btn btn-outline-info" onclick="window.print()">
+                            <i class="bi bi-printer"></i> Распечатать
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-header bg-secondary text-white">
+                    <h5 class="mb-0">⚠️ Информация</h5>
+                </div>
+                <div class="card-body">
+                    <small class="text-muted">
+                        <p><i class="bi bi-info-circle"></i> Все характеристики указаны производителем</p>
+                        <p><i class="bi bi-shield-check"></i> Товар проходит проверку качества</p>
+                        <p><i class="bi bi-clock-history"></i> Актуальность данных: на момент просмотра</p>
+                    </small>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .card {
+        border: none;
+        box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        border-radius: 10px;
+    }
+    .card-header {
+        border-radius: 10px 10px 0 0 !important;
+        padding: 1rem 1.25rem;
+    }
+    .breadcrumb {
+        background-color: #f8f9fa;
+        border-radius: 8px;
+        padding: 0.75rem 1rem;
+    }
+    pre {
+        background-color: #f8f9fa;
+        padding: 1rem;
+        border-radius: 8px;
+        border: 1px solid #e9ecef;
+    }
+    .badge {
+        font-size: 0.9em;
+    }
+</style>
+{% endblock %}

@@ -1,0 +1,269 @@
+{% extends "base.html" %}
+
+{% block title %}Регистрация{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-8 col-lg-6">
+        <div class="card shadow">
+            <div class="card-header bg-success text-white text-center">
+                <h4 class="mb-0"><i class="bi bi-person-plus"></i> Регистрация нового пользователя</h4>
+            </div>
+            <div class="card-body p-4">
+                <form method="POST" action="{{ url_for('register') }}" id="registerForm">
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label for="username" class="form-label">
+                                <i class="bi bi-person-badge"></i> Имя пользователя *
+                            </label>
+                            <input type="text" class="form-control" id="username" name="username" 
+                                   required minlength="3" maxlength="30"
+                                   placeholder="От 3 до 30 символов">
+                            <div class="form-text">
+                                Только латинские буквы, цифры и символы _ - .
+                            </div>
+                            <div class="invalid-feedback" id="usernameFeedback">
+                                Имя пользователя уже занято
+                            </div>
+                        </div>
+                        
+                        <div class="col-md-6 mb-3">
+                            <label for="email" class="form-label">
+                                <i class="bi bi-envelope"></i> Email адрес *
+                            </label>
+                            <input type="email" class="form-control" id="email" name="email" 
+                                   required placeholder="example@domain.com">
+                            <div class="form-text">
+                                На этот email будут отправляться уведомления
+                            </div>
+                            <div class="invalid-feedback" id="emailFeedback">
+                                Email уже зарегистрирован
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label for="password" class="form-label">
+                                <i class="bi bi-key"></i> Пароль *
+                            </label>
+                            <input type="password" class="form-control" id="password" name="password" 
+                                   required minlength="6" 
+                                   placeholder="Не менее 6 символов">
+                            <div class="progress mt-2" style="height: 5px;">
+                                <div class="progress-bar" id="passwordStrength" role="progressbar"></div>
+                            </div>
+                            <div class="form-text">
+                                Используйте буквы, цифры и специальные символы
+                            </div>
+                        </div>
+                        
+                        <div class="col-md-6 mb-3">
+                            <label for="confirm_password" class="form-label">
+                                <i class="bi bi-key-fill"></i> Подтверждение пароля *
+                            </label>
+                            <input type="password" class="form-control" id="confirm_password" 
+                                   required placeholder="Повторите пароль">
+                            <div class="form-text" id="passwordMatchText">
+                                Пароли должны совпадать
+                            </div>
+                            <div class="invalid-feedback" id="passwordFeedback">
+                                Пароли не совпадают
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="mb-4">
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" id="terms" required>
+                            <label class="form-check-label" for="terms">
+                                Я согласен с <a href="#" data-bs-toggle="modal" data-bs-target="#termsModal">условиями использования</a> *
+                            </label>
+                        </div>
+                    </div>
+                    
+                    <div class="d-grid gap-2">
+                        <button type="submit" class="btn btn-success btn-lg" id="submitBtn">
+                            <i class="bi bi-person-plus"></i> Зарегистрироваться
+                        </button>
+                    </div>
+                </form>
+                
+                <div class="text-center mt-4">
+                    <p class="mb-0">Уже есть аккаунт?</p>
+                    <a href="{{ url_for('login') }}" class="btn btn-outline-success">
+                        <i class="bi bi-box-arrow-in-right"></i> Войти в систему
+                    </a>
+                </div>
+            </div>
+            
+            <div class="card-footer bg-light">
+                <div class="row text-center">
+                    <div class="col-md-4 mb-2">
+                        <small class="text-muted">
+                            <i class="bi bi-shield-check"></i><br>
+                            Безопасность
+                        </small>
+                    </div>
+                    <div class="col-md-4 mb-2">
+                        <small class="text-muted">
+                            <i class="bi bi-lock"></i><br>
+                            Шифрование
+                        </small>
+                    </div>
+                    <div class="col-md-4 mb-2">
+                        <small class="text-muted">
+                            <i class="bi bi-person-check"></i><br>
+                            Конфиденциальность
+                        </small>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="mt-4">
+            <div class="alert alert-warning">
+                <h5 class="alert-heading"><i class="bi bi-exclamation-triangle"></i> Важная информация</h5>
+                <ul class="mb-0">
+                    <li>После регистрации вы получите доступ к функциям поиска товаров</li>
+                    <li>Права администратора предоставляются отдельно</li>
+                    <li>Рекомендуем использовать разные пароли для разных сервисов</li>
+                    <li>Сохраните свои учетные данные в безопасном месте</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal для условий использования -->
+<div class="modal fade" id="termsModal" tabindex="-1">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Условия использования</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <h6>1. Общие положения</h6>
+                <p>Система складского учёта предназначена для управления товарными запасами...</p>
+                
+                <h6>2. Регистрация пользователя</h6>
+                <p>При регистрации вы обязуетесь предоставлять достоверную информацию...</p>
+                
+                <h6>3. Ответственность</h6>
+                <p>Пользователь несет ответственность за сохранность своих учетных данных...</p>
+                
+                <h6>4. Конфиденциальность</h6>
+                <p>Мы обязуемся защищать ваши персональные данные в соответствии с законом...</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Закрыть</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .card {
+        border: none;
+        border-radius: 15px;
+    }
+    .card-header {
+        border-radius: 15px 15px 0 0 !important;
+        padding: 1.5rem;
+    }
+    .form-control:focus {
+        border-color: #198754;
+        box-shadow: 0 0 0 0.25rem rgba(25, 135, 84, 0.25);
+    }
+    .progress {
+        background-color: #e9ecef;
+    }
+    .btn-success {
+        padding: 0.75rem;
+        font-weight: 500;
+    }
+</style>
+
+<!-- Bootstrap Icons -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
+
+<!-- JavaScript для валидации формы -->
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const form = document.getElementById('registerForm');
+    const password = document.getElementById('password');
+    const confirmPassword = document.getElementById('confirm_password');
+    const passwordStrength = document.getElementById('passwordStrength');
+    const passwordMatchText = document.getElementById('passwordMatchText');
+    const submitBtn = document.getElementById('submitBtn');
+    
+    // Проверка сложности пароля
+    password.addEventListener('input', function() {
+        const pass = this.value;
+        let strength = 0;
+        
+        if (pass.length >= 6) strength += 25;
+        if (pass.match(/[a-z]/)) strength += 25;
+        if (pass.match(/[A-Z]/)) strength += 25;
+        if (pass.match(/[0-9]/)) strength += 25;
+        if (pass.match(/[^a-zA-Z0-9]/)) strength += 25;
+        
+        passwordStrength.style.width = Math.min(strength, 100) + '%';
+        
+        if (strength < 50) {
+            passwordStrength.className = 'progress-bar bg-danger';
+        } else if (strength < 75) {
+            passwordStrength.className = 'progress-bar bg-warning';
+        } else {
+            passwordStrength.className = 'progress-bar bg-success';
+        }
+    });
+    
+    // Проверка совпадения паролей
+    confirmPassword.addEventListener('input', function() {
+        if (password.value !== this.value) {
+            this.classList.add('is-invalid');
+            passwordMatchText.className = 'form-text text-danger';
+            passwordMatchText.textContent = 'Пароли не совпадают';
+            submitBtn.disabled = true;
+        } else {
+            this.classList.remove('is-invalid');
+            passwordMatchText.className = 'form-text text-success';
+            passwordMatchText.textContent = 'Пароли совпадают ✓';
+            submitBtn.disabled = false;
+        }
+    });
+    
+    // Проверка имени пользователя на уникальность (упрощенная клиентская проверка)
+    document.getElementById('username').addEventListener('blur', function() {
+        const username = this.value;
+        if (username.length >= 3) {
+            // Здесь можно добавить AJAX запрос для проверки на сервере
+            const forbiddenNames = ['admin', 'root', 'administrator', 'system'];
+            if (forbiddenNames.includes(username.toLowerCase())) {
+                this.classList.add('is-invalid');
+                document.getElementById('usernameFeedback').textContent = 
+                    'Это имя пользователя зарезервировано';
+            } else {
+                this.classList.remove('is-invalid');
+            }
+        }
+    });
+    
+    // Проверка формата email
+    document.getElementById('email').addEventListener('blur', function() {
+        const email = this.value;
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        
+        if (!emailRegex.test(email)) {
+            this.classList.add('is-invalid');
+            document.getElementById('emailFeedback').textContent = 
+                'Введите корректный email адрес';
+        } else {
+            this.classList.remove('is-invalid');
+        }
+    });
+});
+</script>
+{% endblock %}

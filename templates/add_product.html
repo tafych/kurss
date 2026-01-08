@@ -1,0 +1,153 @@
+{% extends "base.html" %}
+
+{% block title %}Добавить товар{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-10">
+        <div class="card">
+            <div class="card-header bg-success text-white">
+                <h4 class="mb-0"><i class="bi bi-plus-circle"></i> Добавить новый товар</h4>
+            </div>
+            <div class="card-body">
+                <form method="POST" action="{{ url_for('add_product') }}" id="addProductForm">
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label for="name" class="form-label">Название товара *</label>
+                            <input type="text" class="form-control" id="name" name="name" required>
+                            <div class="form-text">Полное название товара</div>
+                        </div>
+
+                        <div class="col-md-6 mb-3">
+                            <label for="sku" class="form-label">Артикул (SKU) *</label>
+                            <input type="text" class="form-control" id="sku" name="sku" required>
+                            <div class="form-text">Уникальный артикул товара</div>
+                        </div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="description" class="form-label">Краткое описание *</label>
+                        <textarea class="form-control" id="description" name="description"
+                                  rows="3" required placeholder="Краткое описание товара для поиска"></textarea>
+                        <div class="form-text">Краткое описание, которое будет отображаться в поиске</div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="detailed_specs" class="form-label">📋 Подробные характеристики</label>
+                        <textarea class="form-control" id="detailed_specs" name="detailed_specs"
+                                  rows="8" placeholder="Введите подробные характеристики товара..."></textarea>
+                        <div class="form-text">
+                            Используйте форматирование с помощью символов:<br>
+                            • для списка или 📱 для эмодзи<br>
+                            Каждая характеристика с новой строки
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-4 mb-3">
+                            <label for="quantity" class="form-label">Количество *</label>
+                            <input type="number" class="form-control" id="quantity" name="quantity"
+                                   min="0" value="0" required>
+                            <div class="form-text">Количество на складе</div>
+                        </div>
+
+                        <div class="col-md-4 mb-3">
+                            <label for="price" class="form-label">Цена *</label>
+                            <div class="input-group">
+                                <input type="number" class="form-control" id="price" name="price"
+                                       min="0" step="0.01" required>
+                                <span class="input-group-text">₽</span>
+                            </div>
+                            <div class="form-text">Цена в рублях</div>
+                        </div>
+
+                        <div class="col-md-4 mb-3">
+                            <label for="category_id" class="form-label">Категория</label>
+                            <select class="form-select" id="category_id" name="category_id">
+                                <option value="">Без категории</option>
+                                {% for category in categories %}
+                                <option value="{{ category.id }}">{{ category.name }}</option>
+                                {% endfor %}
+                            </select>
+                            <div class="form-text">Выберите категорию товара</div>
+                        </div>
+                    </div>
+
+                    <div class="d-grid gap-2 d-md-flex justify-content-md-end mt-4">
+                        <a href="{{ url_for('admin') }}" class="btn btn-secondary me-md-2">
+                            <i class="bi bi-x-circle"></i> Отмена
+                        </a>
+                        <button type="submit" class="btn btn-success">
+                            <i class="bi bi-check-circle"></i> Добавить товар
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <div class="row mt-4">
+            <div class="col-md-6">
+                <div class="card">
+                    <div class="card-header bg-info text-white">
+                        <h6 class="mb-0">📝 Пример заполнения характеристик</h6>
+                    </div>
+                    <div class="card-body">
+                        <small>
+                            <pre style="font-size: 0.8rem; background: #f8f9fa; padding: 10px; border-radius: 5px;">
+📱 Дисплей: 6.1" Dynamic AMOLED 2X
+💾 Процессор: Snapdragon 8 Gen 2
+🎮 Оперативная память: 8 ГБ
+💿 Память: 256 ГБ
+📷 Камера: 50 Мп + 10 Мп + 12 Мп
+🔋 Аккумулятор: 3900 мАч
+⚡ Зарядка: 25 Вт
+🌈 Цвет: Фиолетовый</pre>
+                        </small>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-6">
+                <div class="card">
+                    <div class="card-header bg-warning">
+                        <h6 class="mb-0">ℹ️ Важная информация</h6>
+                    </div>
+                    <div class="card-body">
+                        <ul class="mb-0" style="font-size: 0.9rem;">
+                            <li>Поля, отмеченные *, обязательны для заполнения</li>
+                            <li>Артикул (SKU) должен быть уникальным</li>
+                            <li>Количество не может быть отрицательным</li>
+                            <li>Цена указывается в рублях</li>
+                            <li>Подробные характеристики можно добавить позже</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Автогенерация SKU на основе названия
+    document.getElementById('name').addEventListener('blur', function() {
+        const skuField = document.getElementById('sku');
+        const name = this.value.trim();
+
+        if (name && !skuField.value) {
+            // Генерируем SKU из первых букв слов
+            const sku = name
+                .toUpperCase()
+                .replace(/[^A-ZА-Я0-9\s]/g, '')
+                .split(' ')
+                .filter(word => word.length > 0)
+                .map(word => word.substring(0, 3))
+                .join('')
+                .substring(0, 8);
+
+            skuField.value = sku + Math.floor(Math.random() * 100);
+        }
+    });
+});
+</script>
+{% endblock %}

@@ -1,0 +1,139 @@
+{% extends "base.html" %}
+
+{% block title %}Главная страница{% endblock %}
+
+{% block content %}
+<div class="text-center py-5">
+    <h1 class="display-4 mb-4">Добро пожаловать в систему складского учёта</h1>
+    
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <p class="lead mb-4">
+                Современное решение для управления товарными запасами, 
+                которое поможет автоматизировать процессы учёта, 
+                контроля и анализа складских операций.
+            </p>
+            
+            {% if not session.user_id %}
+            <div class="card mb-4">
+                <div class="card-body">
+                    <h5 class="card-title">Начните работу прямо сейчас</h5>
+                    <p class="card-text">
+                        Зарегистрируйтесь или войдите в систему, чтобы получить доступ 
+                        к функциям поиска товаров и управления складом.
+                    </p>
+                    <div class="d-grid gap-2 d-md-flex justify-content-md-center">
+                        <a href="{{ url_for('register') }}" class="btn btn-primary btn-lg me-md-2">
+                            <i class="bi bi-person-plus"></i> Регистрация
+                        </a>
+                        <a href="{{ url_for('login') }}" class="btn btn-outline-primary btn-lg">
+                            <i class="bi bi-box-arrow-in-right"></i> Вход
+                        </a>
+                    </div>
+                </div>
+            </div>
+            {% else %}
+            <div class="card mb-4">
+                <div class="card-body">
+                    <h5 class="card-title">Добро пожаловать, {{ session.username }}!</h5>
+                    <p class="card-text">
+                        Вы успешно вошли в систему. Теперь вы можете использовать 
+                        все доступные вам функции.
+                    </p>
+                    <div class="d-grid gap-2 d-md-flex justify-content-md-center">
+                        <a href="{{ url_for('search') }}" class="btn btn-primary btn-lg me-md-2">
+                            <i class="bi bi-search"></i> Поиск товаров
+                        </a>
+                        {% if session.is_admin %}
+                        <a href="{{ url_for('admin') }}" class="btn btn-success btn-lg">
+                            <i class="bi bi-gear"></i> Панель администратора
+                        </a>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+    
+    <div class="row mt-5">
+        <div class="col-md-4 mb-4">
+            <div class="card h-100">
+                <div class="card-body text-center">
+                    <div class="display-1 text-primary mb-3">
+                        <i class="bi bi-search"></i>
+                    </div>
+                    <h3 class="card-title">Умный поиск</h3>
+                    <p class="card-text">
+                        Быстрый поиск товаров по названию, артикулу и категориям 
+                        с удобной сортировкой и фильтрацией.
+                    </p>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-md-4 mb-4">
+            <div class="card h-100">
+                <div class="card-body text-center">
+                    <div class="display-1 text-success mb-3">
+                        <i class="bi bi-bar-chart"></i>
+                    </div>
+                    <h3 class="card-title">Контроль остатков</h3>
+                    <p class="card-text">
+                        Отслеживание текущих остатков товаров, 
+                        просмотр истории изменений и аналитика продаж.
+                    </p>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-md-4 mb-4">
+            <div class="card h-100">
+                <div class="card-body text-center">
+                    <div class="display-1 text-warning mb-3">
+                        <i class="bi bi-shield-check"></i>
+                    </div>
+                    <h3 class="card-title">Безопасность</h3>
+                    <p class="card-text">
+                        Многоуровневая система безопасности с разделением прав доступа 
+                        и шифрованием конфиденциальных данных.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="mt-5">
+        <h3 class="mb-4">Статистика системы</h3>
+        <div class="row justify-content-center">
+            <div class="col-auto">
+                <div class="card text-bg-light">
+                    <div class="card-body text-center">
+                        <h5 class="card-title">Доступные функции</h5>
+                        <ul class="list-unstyled">
+                            <li>✓ Управление товарами</li>
+                            <li>✓ Поиск и фильтрация</li>
+                            <li>✓ Контроль остатков</li>
+                            <li>✓ Многопользовательский доступ</li>
+                            <li>✓ Ролевая модель доступа</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .card {
+        transition: transform 0.3s;
+    }
+    .card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+    }
+    .bi::before {
+        display: inline-block;
+    }
+</style>
+{% endblock %}
