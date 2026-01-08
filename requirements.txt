@@ -8,4 +8,5 @@ python-dotenv
 Flask-OAuthlib
 requests-oauthlib
 pymysql
+gunicorn
 Werkzeug
